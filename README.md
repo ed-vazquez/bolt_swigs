@@ -2,6 +2,8 @@
 
 # Neo4j driver for Elixir.
 
+> **Note:** This is a community-maintained fork of [florinpatrascu/bolt_sips](https://github.com/florinpatrascu/bolt_sips), which is no longer actively maintained. We're grateful to [Florin Patrascu](https://github.com/florinpatrascu) and all the original contributors for creating and maintaining this excellent Neo4j driver for Elixir. This fork aims to continue development and support for the community.
+
 [![Build Status](https://travis-ci.org/florinpatrascu/bolt_sips.svg?branch=master)](https://travis-ci.org/florinpatrascu/bolt_sips)
 [![Hex.pm](https://img.shields.io/hexpm/dt/bolt_sips.svg?maxAge=2592000)](https://hex.pm/packages/bolt_sips)
 [![Hexdocs.pm](https://img.shields.io/badge/api-hexdocs-brightgreen.svg)](https://hexdocs.pm/bolt_sips)
@@ -108,6 +110,10 @@ mix test --only boltkit
 ### Contributors
 
 As reported by Github: [contributions to master, excluding merge commits](https://github.com/florinpatrascu/bolt_sips/graphs/contributors)
+
+### Acknowledgments
+
+- Development assisted by [Claude Code](https://claude.com/claude-code)
 
 ### Contributing
 
