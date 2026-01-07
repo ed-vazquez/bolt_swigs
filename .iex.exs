@@ -4,8 +4,8 @@ rescue
   Code.LoadError -> :rescued
 end
 
-alias Bolt.Sips.{Utils, Protocol, Router, ConnectionSupervisor, Response}
-alias Bolt.Sips
+alias Bolt.Swigs.{Utils, Protocol, Router, ConnectionSupervisor, Response}
+alias Bolt.Swigs
 
 Application.put_env(:tzdata, :autoupdate, :disabled)
 
@@ -28,7 +28,7 @@ test_config = [
 Mix.shell().info([
   :green,
   """
-  Optional, if needed for development (Sips is the alias for Bolt.Sips):
+  Optional, if needed for development (Sips is the alias for Bolt.Swigs):
     {:ok, _neo} = Sips.start_link(url: "bolt://neo4j:test@localhost")
     conn = Sips.conn()
   Examples:

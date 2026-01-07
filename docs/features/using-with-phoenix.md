@@ -1,6 +1,6 @@
-# Using Bolt.Sips with Phoenix, or similar
+# Using Bolt.Swigs with Phoenix, or similar
 
-Don't forget to start the `Bolt.Sips` driver in your supervision tree. Example:
+Don't forget to start the `Bolt.Swigs` driver in your supervision tree. Example:
 
 ```elixir
 defmodule MoviesElixirPhoenix do
@@ -12,7 +12,7 @@ defmodule MoviesElixirPhoenix do
     # Define workers and child supervisors to be supervised
     children = [
       # Start the endpoint when the application starts
-      {Bolt.Sips, Application.get_env(:bolt_sips, Bolt)},
+      {Bolt.Swigs, Application.get_env(:bolt_swigs, Bolt)},
       %{
         id: MoviesElixirPhoenix.Endpoint,
         start: {MoviesElixirPhoenix.Endpoint, :start_link, []}

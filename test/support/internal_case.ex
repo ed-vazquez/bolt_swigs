@@ -1,7 +1,7 @@
-defmodule Bolt.Sips.InternalCase do
+defmodule Bolt.Swigs.InternalCase do
   use ExUnit.CaseTemplate
 
-  alias Bolt.Sips.Internals.BoltProtocol
+  alias Bolt.Swigs.Internals.BoltProtocol
 
   setup do
     uri = neo4j_uri()

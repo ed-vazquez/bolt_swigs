@@ -1,8 +1,8 @@
-defmodule Bolt.Sips.Routing.CrudTest do
-  use Bolt.Sips.RoutingConnCase
+defmodule Bolt.Swigs.Routing.CrudTest do
+  use Bolt.Swigs.RoutingConnCase
   @moduletag :routing
 
-  alias Bolt.Sips
+  alias Bolt.Swigs
 
   describe "Basic Read/Write; " do
     test "read" do

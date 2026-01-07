@@ -1,10 +1,10 @@
-defmodule Bolt.Sips.Fixture do
+defmodule Bolt.Swigs.Fixture do
   def create_graph(conn, :movie) do
-    Bolt.Sips.query!(conn, movie_cypher())
+    Bolt.Swigs.query!(conn, movie_cypher())
   end
 
-  def create_graph(conn, :bolt_sips) do
-    Bolt.Sips.query!(conn, bolt_sips_cypher())
+  def create_graph(conn, :bolt_swigs) do
+    Bolt.Swigs.query!(conn, bolt_sips_cypher())
   end
 
   def bolt_sips_cypher() do

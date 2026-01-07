@@ -27,15 +27,15 @@ defmodule Mix.Tasks.Bolt.Cypher do
        %{"name" => "Joel Silver"}]
   """
 
-  alias Bolt.Sips, as: Neo4j
+  alias Bolt.Swigs, as: Neo4j
 
   @doc false
   def run(args) do
-    Application.ensure_all_started(:bolt_sips)
+    Application.ensure_all_started(:bolt_swigs)
 
     {cli_opts, args, _} = OptionParser.parse(args, aliases: [u: :url, s: :ssl], switches: [])
 
-    options = run_options(cli_opts, Application.get_env(:bolt_sips, Bolt))
+    options = run_options(cli_opts, Application.get_env(:bolt_swigs, Bolt))
 
     if args == [], do: Mix.raise("Try entering a Cypher command")
 
@@ -46,7 +46,7 @@ defmodule Mix.Tasks.Bolt.Cypher do
     # display the cypher command
     log_cypher(cypher)
 
-    with {:ok, response} <- Neo4j.query(Bolt.Sips.conn(), cypher) do
+    with {:ok, response} <- Neo4j.query(Bolt.Swigs.conn(), cypher) do
       response |> log_response
     else
       {:error, [code: code, message: message]} ->

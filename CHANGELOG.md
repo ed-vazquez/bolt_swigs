@@ -24,7 +24,7 @@ Dependencies updated, paving the road to switching to latest Elixir/Erlang combo
 
 ## 2.0.9
 
-- fix: (Bolt.Sips.Exception) unable to encode value: -128, see: https://boltprotocol.org/v1/#ints, for details. Closes #93 Thank you, @kalamarski-marcin
+- fix: (Bolt.Swigs.Exception) unable to encode value: -128, see: https://boltprotocol.org/v1/#ints, for details. Closes #93 Thank you, @kalamarski-marcin
 
 ## 2.0.8
 
@@ -33,17 +33,17 @@ Dependencies updated, paving the road to switching to latest Elixir/Erlang combo
 ## 2.0.7
 
 - sometimes the server version is missing the patch number, and the router couldn't return the proper version. Thank you @barry-w-hill, for finding this bug and reporting it!
-- remove the `basic_auth` when using the `&Bolt.Sips.info/0` function. Thanks @dominique-vassard, for suggestion. Closes: #89
+- remove the `basic_auth` when using the `&Bolt.Swigs.info/0` function. Thanks @dominique-vassard, for suggestion. Closes: #89
 
 ## 2.0.6
 
 - Fix 'unused alias' compilation warnings
-- Fix Bolt.Sips.Response type: `stats` was a `list` instead of `list|map`
-- Add typespec for Bolt.Sips.Types: Node, Relationship and UnboundRelationship
+- Fix Bolt.Swigs.Response type: `stats` was a `list` instead of `list|map`
+- Add typespec for Bolt.Swigs.Types: Node, Relationship and UnboundRelationship
 
 ## 2.0.5
 
-- fix #83. More details in commit: https://github.com/florinpatrascu/bolt_sips/commit/ebe17e62ab1d823e301b11d99d532663b0b25135 Thank you @kristofka!
+- fix #83. More details in commit: https://github.com/florinpatrascu/bolt_swigs/commit/ebe17e62ab1d823e301b11d99d532663b0b25135 Thank you @kristofka!
 
 ## 2.0.4
 
@@ -86,25 +86,25 @@ Read more what this schema is, as defined by the [Neo4j team](https://neo4j.com/
 
 ### Role-based connections
 
-Until this version, Bolt.Sips was used for connecting to a single Neo4j server, aka: the "direct" mode. Basically you configure the driver with a url to a Neo4j server and Bolt.Sips will use that to attach itself to it, using a single configuration, remaining attached to that server until it is restarted (or reconfigured). In direct mode, bolt_sips "knows" only one server.
+Until this version, Bolt.Swigs was used for connecting to a single Neo4j server, aka: the "direct" mode. Basically you configure the driver with a url to a Neo4j server and Bolt.Swigs will use that to attach itself to it, using a single configuration, remaining attached to that server until it is restarted (or reconfigured). In direct mode, bolt_swigs "knows" only one server.
 
 Starting with this version you can have as many distinct connection configurations, each of them dedicated to different Neo4j servers, as/if needed. We call these connections: "role-based connections". For example, when you'll connect to a Neo4j cluster using the new protocol, i.e. by using a configuration like this:
 
-    config :bolt_sips, Bolt,
+    config :bolt_swigs, Bolt,
       # default port considered to be: 7687
       url: "bolt+routing://localhost",
       basic_auth: [username: "neo4j", password: "test"],
       pool_size: 10
 
-Bolt.Sips will automatically create three pools of size 10, with the following **reserved** names: `:read`, `:write` and `:route`. Now you can specify what type of connection you want to use, by its name (role). For example:
+Bolt.Swigs will automatically create three pools of size 10, with the following **reserved** names: `:read`, `:write` and `:route`. Now you can specify what type of connection you want to use, by its name (role). For example:
 
-    wconn = Bolt.Sips.conn(:write)
-    ... = Bolt.Sips.query!(wconn, "CREATE (a:Person {name:'Bob'})")
+    wconn = Bolt.Swigs.conn(:write)
+    ... = Bolt.Swigs.query!(wconn, "CREATE (a:Person {name:'Bob'})")
 
-    rconn = Bolt.Sips.conn(:read)
-    ... = Bolt.Sips.query!(rconn, "MATCH (a:Person {name: 'Bob'}) RETURN a.name AS name")
+    rconn = Bolt.Swigs.conn(:read)
+    ... = Bolt.Swigs.query!(rconn, "MATCH (a:Person {name: 'Bob'}) RETURN a.name AS name")
 
-The roles above: `:read`, `:write` and `:route`, are reserved. Please do not name custom connections using the same names (atoms). And as you just realized, yes: now you can create as many Bolt.Sips **direct** "driver instances" as you want, or as many as your app/hardware supports.
+The roles above: `:read`, `:write` and `:route`, are reserved. Please do not name custom connections using the same names (atoms). And as you just realized, yes: now you can create as many Bolt.Swigs **direct** "driver instances" as you want, or as many as your app/hardware supports.
 
 Please see the documentation for much more details.
 
@@ -117,7 +117,7 @@ Please see the documentation for much more details.
       url: "bolt://localhost"
       url: "bolt+routing://neo4j:password@neo01.graph.example.com:123456?policy=europe"
 
-- Bolt.Sips.Query, will return a Bolt.Sips.Response now; it used to be a simple data structure.
+- Bolt.Swigs.Query, will return a Bolt.Swigs.Response now; it used to be a simple data structure.
 
 ## === 1.5 ===
 
@@ -155,7 +155,7 @@ Please see the documentation for much more details.
 
 ## 1.2.1-rc2
 
-- Bug fix: If a property contains a speciifc types (date, datetime, point, etc.), it wasn't decoded. see: https://github.com/florinpatrascu/bolt_sips/issues/55
+- Bug fix: If a property contains a speciifc types (date, datetime, point, etc.), it wasn't decoded. see: https://github.com/florinpatrascu/bolt_swigs/issues/55
 
 ## 1.2.0-rc2
 
@@ -169,7 +169,7 @@ Please see the documentation for much more details.
 
 ### Breaking changes introduced in version 1.x
 
-- non-closure based transactions are not supported anymore. This is a change introduced in DBConnection 2.x. `Bolt.Sips` version tagged `v0.5.10` is the last version supporting open transactions.
+- non-closure based transactions are not supported anymore. This is a change introduced in DBConnection 2.x. `Bolt.Swigs` version tagged `v0.5.10` is the last version supporting open transactions.
 - the support for ETLS was dropped. It was mostly used for development or hand-crafted deployments
 
 This version is using the official [DBConnection 2.0.0-rc2](https://hex.pm/packages/db_connection/2.0.0-rc.0), from [hex.pm](https://hex.pm)
@@ -202,7 +202,7 @@ This version is using the official [DBConnection 2.0.0-rc2](https://hex.pm/packa
 
 - using Elixir 1.5
 - not using the ConCache anymore. I initially intended to use its support throughout the driver, but it is not needed.
-- README updated with a short snippet from a Phoenix web app demo, showing how to start Bolt.Sips, as a worker
+- README updated with a short snippet from a Phoenix web app demo, showing how to start Bolt.Swigs, as a worker
 - dependencies update
 - minor code cleanup, to prep the code for receiving HA and Bolt routing capabilities
 
@@ -226,12 +226,12 @@ This version is using the official [DBConnection 2.0.0-rc2](https://hex.pm/packa
 
 ## v0.3.1 Breaking changes
 
-- rollback/refactor to optionally allow external configuration options to be defined at runtime. You must start the Bolt.Sips manually, when needed, i.e. `Bolt.Sips.start_link(url: "localhost")`, or by changing your app's mix config file, i.e.
+- rollback/refactor to optionally allow external configuration options to be defined at runtime. You must start the Bolt.Swigs manually, when needed, i.e. `Bolt.Swigs.start_link(url: "localhost")`, or by changing your app's mix config file, i.e.
 
 ```elixir
 def application do
-  [applications: [:logger, :bolt_sips],
-   mod: {Bolt.Sips.Application, []}]
+  [applications: [:logger, :bolt_swigs],
+   mod: {Bolt.Swigs.Application, []}]
 end
 ```
 
@@ -240,7 +240,7 @@ You can also specify custom configuration settings in you app's mix config file.
 ```elixir
 def application do
   [extra_applications: [:logger], mod:
-    {Bolt.Sips.Application, [url: 'localhost', pool_size: 15]}
+    {Bolt.Swigs.Application, [url: 'localhost', pool_size: 15]}
   ]
 end
 ```
@@ -271,7 +271,7 @@ end
 ## v0.2.1 (2017-02-20)
 
 - stop retrying a request if the failure is an internal one (driver, or driver dependencies related).
-- update the Boltex driver containing two important bug fixes: one where Boltex will fail when receiving too much data (florinpatrascu/bolt_sips/issues/16) and the other one, an improvement, make Boltex.Error.get_id/1 more resilient for new transports (details here: mschae/boltex/issues/14)
+- update the Boltex driver containing two important bug fixes: one where Boltex will fail when receiving too much data (florinpatrascu/bolt_swigs/issues/16) and the other one, an improvement, make Boltex.Error.get_id/1 more resilient for new transports (details here: mschae/boltex/issues/14)
 - changed the pool strategy to :fifo, and its timeout to :infinity, and let the (:gen_server) call timeout expire according to the user's :timeout configuration parameter
 - added a test unit provided by @adri (thank you), for executing a Cypher query, with large set of parameters
 
@@ -291,9 +291,9 @@ end
 
 ## v0.1.9 (2017-01-27)
 
-Some of the users are encountering difficulties when trying to compile bolt_sips on Windows. This release is addressing their concern.
+Some of the users are encountering difficulties when trying to compile bolt_swigs on Windows. This release is addressing their concern.
 
-`Bolt.Sips` will use the optional System variable: `BOLT_WITH_ETLS`, for depending on the [ETLS](https://hex.pm/packages/etls) package. If that variable is not defined, then `Bolt.Sips` will use the standard Erlang [`:ssl` module](http://erlang.org/doc/man/ssl.html), for the SSL/TLS protocol; the default behavior, starting with this version.
+`Bolt.Swigs` will use the optional System variable: `BOLT_WITH_ETLS`, for depending on the [ETLS](https://hex.pm/packages/etls) package. If that variable is not defined, then `Bolt.Swigs` will use the standard Erlang [`:ssl` module](http://erlang.org/doc/man/ssl.html), for the SSL/TLS protocol; the default behavior, starting with this version.
 
 Therefore, if you want the **much** faster ssl/tls support offered by ETLS, then use this: `export BOLT_WITH_ETLS=true` on Linux/OSX, for example. Then:
 
@@ -325,7 +325,7 @@ Many thanks to: [Ben Wilson](https://elixir-lang.slack.com/team/benwilson512), f
 - we're already using configurable timeouts, when executing requests from the connection pool. But with Bolt, the initial handshake sequence (happening before sending any commands to the server) is represented by two important calls, executed in sequence: `handshake` and `init`, and they must both succeed, before sending any (Cypher) requests. You can see the details in the [Bolt protocol](http://boltprotocol.org/v1/#handshake) specs. This sequence is also sensitive to latencies, such as: network latencies, busy servers, etc., and because of that we're introducing a simple support for retrying the handshake (and the subsequent requests) with a linear backoff, and try the handshake sequence (or the request) a couple of times before giving up - all these as part of the exiting pool management, of course. This retry is configurable via a new configuration parameter, the: `:retry_linear_backoff`, respectively. For example:
 
 ```elixir
-config :bolt_sips, Bolt,
+config :bolt_swigs, Bolt,
   url: "bolt://Bilbo:Baggins@hobby-hobbits.dbs.graphenedb.com:24786",
   ssl: true,
   timeout: 15_000,
@@ -339,17 +339,17 @@ In the example above the retry will linearly increase the delay from 150ms follo
 - as requested by many users, this version is introducing the optional `url` configuration parameter. If present, it will be used for extracting the host name, the port and the authentication details. Please see the README, for a couple of examples. For brevity:
 
 ```elixir
-config :bolt_sips, Bolt,
+config :bolt_swigs, Bolt,
   url: 'bolt://demo:demo@hobby-wowsoeasy.dbs.graphenedb.com:24786',
   ssl: true
 ```
 
 ## v0.1.4 (Merry Christmas)
 
-- add support for connecting to Neo4j servers on encrypted sockets. Currently only TLSv1.2 is supported, using the default [BoringSSL](https://boringssl.googlesource.com/boringssl/) cipher; via [:etls](https://github.com/kzemek/etls). To connect securely to a remote Neo4j server, such as the ones provided by graphenedb.com, modify your Bolt.Sips config file like this (example):
+- add support for connecting to Neo4j servers on encrypted sockets. Currently only TLSv1.2 is supported, using the default [BoringSSL](https://boringssl.googlesource.com/boringssl/) cipher; via [:etls](https://github.com/kzemek/etls). To connect securely to a remote Neo4j server, such as the ones provided by graphenedb.com, modify your Bolt.Swigs config file like this (example):
 
 ```elixir
-config :bolt_sips, Bolt,
+config :bolt_swigs, Bolt,
   hostname: 'bolt://hobby-blah.dbs.graphenedb.com',
   basic_auth: [username: "wow", password: "of_course_this_is_the_password"],
   port: 24786,
@@ -364,7 +364,7 @@ Please note this is work in progress
 
 ## v0.1.2 (2016-11-06)
 
-- integrate the Boltex code from https://github.com/mschae/boltex, and let the Bolt.Sips wrapper to manage the connectivity, using a simple Poolboy implementation for connection pooling
+- integrate the Boltex code from https://github.com/mschae/boltex, and let the Bolt.Swigs wrapper to manage the connectivity, using a simple Poolboy implementation for connection pooling
 
 ## v0.1.1 (2016-09-09)
 

@@ -1,33 +1,33 @@
 # Routing
 
-When connecting to a Neo4j cluster, `Bolt.Sips` will create 3 distinct connection pools, each of them dedicated to one of the following connection types (**connection roles**):
+When connecting to a Neo4j cluster, `Bolt.Swigs` will create 3 distinct connection pools, each of them dedicated to one of the following connection types (**connection roles**):
 
 - `:route` - used for getting information from the Neo4j router, such as: routing details about which server is handling what type of role: read/write, and more.
 - `:read` - used for read-only connections
 - `:write` - used for write-only connections.
 
-Having the `Bolt.Sips` configured in `routing` mode, will enforce your code to clarify what type of connections you want, type you **must** specify when requesting a `Bolt.Sips` connection. Example:
+Having the `Bolt.Swigs` configured in `routing` mode, will enforce your code to clarify what type of connections you want, type you **must** specify when requesting a `Bolt.Swigs` connection. Example:
 
 ```elixir
-rconn = Bolt.Sips.conn(:read)
-wconn = Bolt.Sips.conn(:write)
-router_conn = Bolt.Sips.conn(:route)
+rconn = Bolt.Swigs.conn(:read)
+wconn = Bolt.Swigs.conn(:write)
+router_conn = Bolt.Swigs.conn(:route)
 ```
 
-Without being explicit about the connection type, you will receive errors, in case you'll attempt to execute a query that will say: create new nodes, on a server having the role: `read` or `route`. This is the only rule you must observe, when using the `Bolt.Sips` driver with a causal cluster.
+Without being explicit about the connection type, you will receive errors, in case you'll attempt to execute a query that will say: create new nodes, on a server having the role: `read` or `route`. This is the only rule you must observe, when using the `Bolt.Swigs` driver with a causal cluster.
 
 ## Routing walk-through
 
-Let's walk-through a simple experiment with using `Bolt.Sips` in routing mode and a Neo4j cluster.
+Let's walk-through a simple experiment with using `Bolt.Swigs` in routing mode and a Neo4j cluster.
 
 If you don't have a local server, or a remote Neo4j cluster available for your tests, you can easily setup your own local playground. All you need is Docker.
 
-We'll use a [docker-compose.yml](../../docker-compose.yml) file that you can find in the `Bolt.Sips` main source repo.
+We'll use a [docker-compose.yml](../../docker-compose.yml) file that you can find in the `Bolt.Swigs` main source repo.
 
 If you have:
 
 - [Docker](<https://en.wikipedia.org/wiki/Docker_(software)>) installed, and running. You can get Docker from here: https://docs.docker.com/installation/
-- and a simple Elixir project having the `:bolt_sips` driver installer, as a dependency
+- and a simple Elixir project having the `:bolt_swigs` driver installer, as a dependency
 
 ### Start the Neo4j cluster
 
@@ -71,14 +71,14 @@ core3    | 2019-06-17 12:37:59.165+0000 INFO  Remote interface available at http
 
 Check to see if you can connect to your local Neo4j cluster, as simple as pointing your Internet browser to this url: `http://localhost:7474`, and if everything was executed successfully, you'll be seeing the familiar Neo4j web interface.
 
-Now let's play with the `Bolt.Sips`driver and our local Neo4j cluster.
+Now let's play with the `Bolt.Swigs`driver and our local Neo4j cluster.
 
 Change your elixir test project configuration and modify the `config/config.exs` file like this (excerpt):
 
 ```elixir
 use Mix.Config
 
-config :bolt_sips, Bolt,
+config :bolt_swigs, Bolt,
   # bolt+routing will be deprecated?!
   # url: "bolt+routing://localhost:7687",
   url: "neo4j://localhost:7687",
@@ -89,7 +89,7 @@ config :bolt_sips, Bolt,
 then start a IEx shell session, from the projects'r main folder: `iex -S mix`. While inside the IEx session, let's see if our configuration is sound?
 
 ```elixir
-iex> Bolt.Sips.info()
+iex> Bolt.Swigs.info()
 %{
   default: %{
     connections: %{
@@ -137,8 +137,8 @@ But don't worry about the gory details, we got you covered :)
 Let's run some Cypher queries.
 
 ```elixir
-iex> alias Bolt.Sips.Response
-iex> alias Bolt.Sips, as: Neo
+iex> alias Bolt.Swigs.Response
+iex> alias Bolt.Swigs, as: Neo
 
 # obtaining a read(only) connection:
 iex> rconn = Neo.conn(:read)
@@ -146,7 +146,7 @@ iex> rconn = Neo.conn(:read)
 
 # checking if there are any Person nodes "named": Bob?
 iex> %Response{results: r} = Neo.query!(rconn, "MATCH (p:Person{name: 'Bob'}) RETURN p")
-%Bolt.Sips.Response{
+%Bolt.Swigs.Response{
   bookmark: "neo4j:bookmark:v1:tx2",
   fields: ["p"],
   notifications: [],
@@ -166,7 +166,7 @@ iex> wconn = Neo.conn(:write)
 # and now we can use it for creating a new node:
 
 iex> %Response{results: r} = Neo.query!(wconn, "CREATE (p:Person{name:'Bob'})")
-%Bolt.Sips.Response{
+%Bolt.Swigs.Response{
   ...
   stats: %{"labels-added" => 1, "nodes-created" => 1, "properties-set" => 1},
   type: "w"
@@ -177,7 +177,7 @@ iex> %Response{results: r} = Neo.query!(wconn, "CREATE (p:Person{name:'Bob'})")
 
 iex> Neo.query!(rconn, "MATCH (p:Person{name: 'Bob'}) RETURN p") |> Response.first()
 %{
-  "p" => %Bolt.Sips.Types.Node{
+  "p" => %Bolt.Swigs.Types.Node{
     id: 20,
     labels: ["Person"],
     properties: %{"name" => "Bob"}
@@ -188,7 +188,7 @@ iex> Neo.query!(rconn, "MATCH (p:Person{name: 'Bob'}) RETURN p") |> Response.fir
 # Do you need its json form, instead? Easy:
 iex> Neo.query!(rconn, "MATCH (p:Person{name: 'Bob'}) RETURN p") |>
 ...> Response.first() |>
-...> Bolt.Sips.ResponseEncoder.encode!(:json)
+...> Bolt.Swigs.ResponseEncoder.encode!(:json)
 "{\"p\":{\"id\":20,\"labels\":[\"Person\"],\"properties\":{\"name\":\"Bob\"}}}"
 
 ```
@@ -197,7 +197,7 @@ But what happens if we try to create a new Person, using our `read` connection?
 
 ```elixir
 iex> Neo.query!(rconn, "CREATE (p:Person{name:'Alice'})")
-** (Bolt.Sips.Exception) ... No write operations are allowed directly on this database. Writes must pass through the leader. The role of this server is: FOLLOWER
+** (Bolt.Swigs.Exception) ... No write operations are allowed directly on this database. Writes must pass through the leader. The role of this server is: FOLLOWER
 ```
 
 Neo4j will promptly let us know we can't use that connection for write operations. This is the main difference that you must consider when coding.
@@ -206,7 +206,7 @@ Same command executed on the proper (write) connection, will be successful:
 
 ```elixir
 iex> Neo.query!(wconn, "CREATE (p:Person{name:'Alice'})")
-%Bolt.Sips.Response{
+%Bolt.Swigs.Response{
   ...
   stats: %{"labels-added" => 1, "nodes-created" => 1, "properties-set" => 1},
   type: "w"

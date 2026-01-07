@@ -4,7 +4,7 @@ Application.ensure_started(:porcelain)
 
 Code.require_file("test_support.exs", __DIR__)
 
-defmodule Bolt.Sips.TestHelper do
+defmodule Bolt.Swigs.TestHelper do
   @doc """
    Read an entire file into a string.
    Return a tuple of success and data.
@@ -28,10 +28,10 @@ defmodule Bolt.Sips.TestHelper do
   defp file_error_description(reason), do: "due to #{reason}."
 end
 
-Bolt.Sips.start_link(Application.get_env(:bolt_sips, Bolt))
+Bolt.Swigs.start_link(Application.get_env(:bolt_swigs, Bolt))
 
 # I am using the test db for debugging and the line below will clear *everything*
-# Bolt.Sips.query(Bolt.Sips.conn, "MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r")
+# Bolt.Swigs.query(Bolt.Swigs.conn, "MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r")
 #
 # todo: The tests should cleanup the data they create.
 

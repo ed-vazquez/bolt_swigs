@@ -13,8 +13,8 @@ defmodule ErrorsTest do
   }
 
   test "create a node using SET properties and a simple map" do
-    %Bolt.Sips.Response{stats: stats, type: type} =
-      Bolt.Sips.query!(Bolt.Sips.conn(), "CREATE (report:Report) SET report = $props", %{
+    %Bolt.Swigs.Response{stats: stats, type: type} =
+      Bolt.Swigs.query!(Bolt.Swigs.conn(), "CREATE (report:Report) SET report = $props", %{
         props: @simple_map
       })
 
@@ -25,9 +25,9 @@ defmodule ErrorsTest do
   test "exception when creating a node using SET properties with a nested map" do
     err = "Property values can only be of primitive types or arrays thereof"
 
-    assert_raise Bolt.Sips.Exception, err, fn ->
-      Bolt.Sips.query!(
-        Bolt.Sips.conn(),
+    assert_raise Bolt.Swigs.Exception, err, fn ->
+      Bolt.Swigs.query!(
+        Bolt.Swigs.conn(),
         "CREATE (report:Report) SET report = $props",
         %{props: @nested_map}
       )
@@ -35,8 +35,8 @@ defmodule ErrorsTest do
   end
 
   test "exception when creating a node using SET properties with a list" do
-    assert_raise Bolt.Sips.Exception, fn ->
-      Bolt.Sips.query!(Bolt.Sips.conn(), "CREATE (report:Report) SET report = $props", %{
+    assert_raise Bolt.Swigs.Exception, fn ->
+      Bolt.Swigs.query!(Bolt.Swigs.conn(), "CREATE (report:Report) SET report = $props", %{
         props: ["foo", "bar"]
       })
     end

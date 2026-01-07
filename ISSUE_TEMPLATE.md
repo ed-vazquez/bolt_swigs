@@ -8,7 +8,7 @@
 * Elixir version (elixir -v):
 * Neo4j and version (Neo4j 3.5.3, etc.):
 * Connection scheme (`bolt://`, `bolt+routing://` or `neo4j://`):
-* Bolt.Sips version (mix deps):
+* Bolt.Swigs version (mix deps):
 * Operating system:
 
 ## Current behavior

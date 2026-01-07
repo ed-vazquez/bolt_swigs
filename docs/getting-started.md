@@ -7,7 +7,7 @@ mix new neo4j_demo --sup --app n4d --module N4D
 cd neo4j_demo
 ```
 
-Open the `mix.exs` and add the bolt_sips dependency.
+Open the `mix.exs` and add the bolt_swigs dependency.
 
 ```elixir
 defmodule N4D.MixProject do
@@ -34,7 +34,7 @@ defmodule N4D.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:bolt_sips, "~> 2.0.0-rc"},
+      {:bolt_swigs, "~> 2.0.0-rc"},
       {:jason, "~> 1.1"}
     ]
   end
@@ -56,14 +56,14 @@ Let's first configure the connection to a running Neo4j server. We presume a sta
 ```elixir
 use Mix.Config
 
-config :bolt_sips, Bolt,
+config :bolt_swigs, Bolt,
   url: "bolt://localhost:7687",
   basic_auth: [username: "neo4j", password: "test"],
   pool_size: 10
 
 ```
 
-With the project configured to connect to a Neo4j server, in direct mode, we can add `Bolt.Sips` to the app's main supervision tree, and let the OTP manage it.
+With the project configured to connect to a Neo4j server, in direct mode, we can add `Bolt.Swigs` to the app's main supervision tree, and let the OTP manage it.
 
 ```elixir
 # lib/n4_d/application.ex
@@ -75,7 +75,7 @@ defmodule N4D.Application do
 
   def start(_type, _args) do
     children = [
-      {Bolt.Sips, Application.get_env(:bolt_sips, Bolt)}
+      {Bolt.Swigs, Application.get_env(:bolt_swigs, Bolt)}
     ]
 
     opts = [strategy: :one_for_one, name: N4D.Supervisor]
@@ -98,8 +98,8 @@ iex -S mix
 A few examples:
 
 ```elixir
-iex> alias Bolt.Sips, as: Neo
-iex> alias Bolt.Sips.Response
+iex> alias Bolt.Swigs, as: Neo
+iex> alias Bolt.Swigs.Response
 
 # check the driver is up and running:
 
@@ -108,7 +108,7 @@ iex> Neo.info()
   default: %{
     connections: %{direct: %{"localhost:7687" => 0}, routing_query: nil},
     user_options: [
-      socket: Bolt.Sips.Socket,
+      socket: Bolt.Swigs.Socket,
       port: 7687,
       url: "bolt://localhost:7687",
       # ...
@@ -145,10 +145,10 @@ iex> response = Neo.query!(conn, "CREATE (p:Person)-[:LIKES]->(t:Technology)")
 }
 
 # query with undirected relationship unless sure of direction
-%Bolt.Sips.Response{results: results} = response =  Neo.query!(conn, "MATCH (p:Person)-[:LIKES]-(t:Technology) RETURN p")
+%Bolt.Swigs.Response{results: results} = response =  Neo.query!(conn, "MATCH (p:Person)-[:LIKES]-(t:Technology) RETURN p")
 
 # where `results` contain:
-[%{"p" => %Bolt.Sips.Types.Node{id: 355, labels: ["Person"], properties: %{}}}]
+[%{"p" => %Bolt.Swigs.Types.Node{id: 355, labels: ["Person"], properties: %{}}}]
 
 # and we can also encode them to json, as simple as this:
 
@@ -157,7 +157,7 @@ iex> Jason.encode!(results)
 
 # of course you can do more:
 
-iex> Bolt.Sips.query!(Bolt.Sips.conn(), "RETURN [10,11,21] AS arr", %{}, timeout: 19_000) |>
+iex> Bolt.Swigs.query!(Bolt.Swigs.conn(), "RETURN [10,11,21] AS arr", %{}, timeout: 19_000) |>
 ...> Enum.reduce(0, &(Enum.sum(&1["arr"]) + &2))
 42
 

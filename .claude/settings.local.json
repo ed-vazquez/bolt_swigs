@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git mv:*)",
+      "Bash(xargs sed:*)",
+      "Bash(mix compile:*)",
+      "Bash(elixir --version:*)",
+      "Bash(mv:*)"
+    ]
+  }
+}

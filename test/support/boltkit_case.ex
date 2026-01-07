@@ -1,4 +1,4 @@
-defmodule Bolt.Sips.BoltKitCase do
+defmodule Bolt.Swigs.BoltKitCase do
   _doc = """
   tag your tests with `boltkit`, like this:
 
@@ -38,7 +38,7 @@ defmodule Bolt.Sips.BoltKitCase do
       with {:ok, pid} <- connect(url, prefix) do
         pid
       else
-        _ -> raise RuntimeError, "cannot create a Bolt.Sips process"
+        _ -> raise RuntimeError, "cannot create a Bolt.Swigs process"
       end
 
     on_exit(fn ->
@@ -83,7 +83,7 @@ defmodule Bolt.Sips.BoltKitCase do
       with true <- File.exists?(script) do
         sport = Integer.to_string(port)
         porcelain = Porcelain.spawn("boltstub", [sport, script], opts)
-        wait_for_socket('127.0.0.1', port)
+        wait_for_socket(~c"127.0.0.1", port)
         {:ok, porcelain}
       else
         _ -> {:error, script <> ", not found."}
@@ -93,11 +93,10 @@ defmodule Bolt.Sips.BoltKitCase do
 
   @sock_opts [:binary, active: false]
   defp wait_for_socket(address, port) do
-      with {:ok, socket} <- :gen_tcp.connect(address, port, @sock_opts, 1000) do
-        socket
-      end
+    with {:ok, socket} <- :gen_tcp.connect(address, port, @sock_opts, 1000) do
+      socket
+    end
   end
-
 
   defp connect(url, prefix) do
     conf = [
@@ -113,6 +112,6 @@ defmodule Bolt.Sips.BoltKitCase do
     ]
 
     Logger.debug("creating #{url}, prefix: #{prefix}")
-    Bolt.Sips.start_link(conf)
+    Bolt.Swigs.start_link(conf)
   end
 end

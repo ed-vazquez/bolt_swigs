@@ -1,20 +1,20 @@
-defmodule BoltSips.Mixfile do
+defmodule BoltSwigs.Mixfile do
   use Mix.Project
 
   @version "2.1.0"
-  @url_docs "https://hexdocs.pm/bolt_sips"
-  @url_github "https://github.com/florinpatrascu/bolt_sips"
+  @url_docs "https://hexdocs.pm/bolt_swigs"
+  @url_github "https://github.com/ed-vazquez/bolt_swigs"
 
   def project do
     [
-      app: :bolt_sips,
+      app: :bolt_swigs,
       version: @version,
       elixir: "~> 1.7",
       elixirc_paths: elixirc_paths(Mix.env()),
       deps: deps(),
       package: package(),
       description: "Neo4j driver for Elixir, using the fast Bolt protocol",
-      name: "Bolt.Sips",
+      name: "Bolt.Swigs",
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
       docs: docs(),
@@ -25,7 +25,7 @@ defmodule BoltSips.Mixfile do
       preferred_cli_env: [
         bench: :bench,
         credo: :dev,
-        bolt_sips: :test,
+        bolt_swigs: :test,
         coveralls: :test,
         "coveralls.html": :test,
         "coveralls.travis": :test
@@ -36,7 +36,7 @@ defmodule BoltSips.Mixfile do
 
   def application do
     [
-      extra_applications: [ :logger ]
+      extra_applications: [:logger]
     ]
   end
 
@@ -60,10 +60,7 @@ defmodule BoltSips.Mixfile do
       ],
       licenses: ["Apache 2.0"],
       maintainers: [
-        "Florin T.PATRASCU",
-        "Dmitriy Nesteryuk",
-        "Dominique VASSARD",
-        "Kristof Semjen"
+        "Ed Vazquez"
       ],
       links: %{
         "Docs" => @url_docs,
@@ -74,12 +71,12 @@ defmodule BoltSips.Mixfile do
 
   defp docs do
     [
-      name: "Bolt.Sips",
-      logo: "assets/bolt_sips_white_transparent.png",
+      name: "Bolt.Swigs",
+      logo: "assets/bolt_swigs_white_transparent.png",
       assets: "assets",
       source_ref: "v#{@version}",
       source_url: @url_github,
-      main: "Bolt.Sips",
+      main: "Bolt.Swigs",
       extra_section: "guides",
       extras: [
         "README.md",
@@ -100,13 +97,13 @@ defmodule BoltSips.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:db_connection, "~> 2.4.2"},
-      {:jason, "~> 1.4", optional: true},
-      {:poison, "~> 5.0", optional: true},
+      {:db_connection, "~> 2.5"},
+      {:jason, ">= 0.0.0", optional: true},
+      {:poison, "~> 6.0", optional: true},
 
       # Testing dependencies
       {:excoveralls, "~> 0.15.0", optional: true, only: [:test, :dev]},
-      {:mix_test_watch, "~> 1.1.0", only: [:dev, :test]},
+      {:mix_test_watch, ">= 1.4.0", only: [:dev, :test]},
       {:porcelain, "~> 2.0.3", only: [:test, :dev], runtime: false},
       {:uuid, "~> 1.1.8", only: [:test, :dev], runtime: false},
       {:tzdata, "~> 1.1", only: [:test, :dev]},
@@ -116,14 +113,12 @@ defmodule BoltSips.Mixfile do
       {:benchee_html, "~> 1.0.0", optional: true, only: [:dev]},
 
       # Linting dependencies
-      {:credo, "~> 1.6.7", only: [:dev]},
-      {:dialyxir, "~> 1.2.0", only: [:dev], runtime: false},
-      # mix eye_drops
-      {:eye_drops, github: "florinpatrascu/eye_drops", only: [:dev, :test], runtime: false},
+      {:credo, ">= 1.7.0", only: [:dev]},
+      {:dialyxir, ">= 0.0.0", only: [:dev], runtime: false},
 
       # Documentation dependencies
       # Run me like this: `mix docs`
-      {:ex_doc, "~> 0.29", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.37-rc", only: :dev, runtime: false}
     ]
   end
 end

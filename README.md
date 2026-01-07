@@ -4,11 +4,11 @@
 
 > **Note:** This is a community-maintained fork of [florinpatrascu/bolt_sips](https://github.com/florinpatrascu/bolt_sips), which is no longer actively maintained. We're grateful to [Florin Patrascu](https://github.com/florinpatrascu) and all the original contributors for creating and maintaining this excellent Neo4j driver for Elixir. This fork aims to continue development and support for the community.
 
-[![Build Status](https://travis-ci.org/florinpatrascu/bolt_sips.svg?branch=master)](https://travis-ci.org/florinpatrascu/bolt_sips)
-[![Hex.pm](https://img.shields.io/hexpm/dt/bolt_sips.svg?maxAge=2592000)](https://hex.pm/packages/bolt_sips)
-[![Hexdocs.pm](https://img.shields.io/badge/api-hexdocs-brightgreen.svg)](https://hexdocs.pm/bolt_sips)
+[![Build Status](https://travis-ci.org/ed-vazquez/bolt_swigs.svg?branch=master)](https://travis-ci.org/ed-vazquez/bolt_swigs)
+[![Hex.pm](https://img.shields.io/hexpm/dt/bolt_swigs.svg?maxAge=2592000)](https://hex.pm/packages/bolt_swigs)
+[![Hexdocs.pm](https://img.shields.io/badge/api-hexdocs-brightgreen.svg)](https://hexdocs.pm/bolt_swigs)
 
-`Bolt.Sips` is an Elixir driver for [Neo4j](https://neo4j.com/developer/graph-database/), providing many useful features:
+`Bolt.Swigs` is an Elixir driver for [Neo4j](https://neo4j.com/developer/graph-database/), providing many useful features:
 
 - using the Bolt protocol, the Elixir implementation - the Neo4j's newest network protocol, designed for high-performance; latest Bolt versions, are supported.
 - Can connect to a standalone Neo4j server (`:direct` mode) or to a Neo4j causal cluster, using the `bolt+routing` or the newer `neo4j` schemes; connecting in `:routing` mode.
@@ -39,22 +39,22 @@ Notes:
 - [Encoding](docs/features/about-encoding.md)
 - [Routing, in detail](docs/features/routing.md)
 - [Multi tenancy, in detail](docs/features/multi-tenancy.md)
-- [Using Bolt.Sips with Phoenix](docs/features/using-with-phoenix.md)
+- [Using Bolt.Swigs with Phoenix](docs/features/using-with-phoenix.md)
 - [More examples](docs/examples/readme.md)
 
 ### Installation
 
-[Available in Hex](https://hex.pm/packages/bolt_sips), the package can be added to your list of dependencies, in the: `mix.exs`:
+[Available in Hex](https://hex.pm/packages/bolt_swigs), the package can be added to your list of dependencies, in the: `mix.exs`:
 
 ```elixir
 def deps do
-  [{:bolt_sips, "~> 2.0"}]
+  [{:bolt_swigs, "~> 2.0"}]
 end
 ```
 
 ### Basic usage
 
-Provided you have access to a running Neo4j server, and a project where you just added the `:bolt_sips` dependency, run an `iex` session inside the project's folder, and once inside the shell, follow this simple step-by-step example.
+Provided you have access to a running Neo4j server, and a project where you just added the `:bolt_swigs` dependency, run an `iex` session inside the project's folder, and once inside the shell, follow this simple step-by-step example.
 
 Start an iex session:
 
@@ -62,14 +62,14 @@ Start an iex session:
 Erlang/OTP 21 [erts-10.2.3] [source] [64-bit] [smp:8:8] [ds:8:8:10] [async-threads:1] [hipe]
 Interactive Elixir (1.8.1) - press Ctrl+C to exit (type h() ENTER for help)
 
-iex> {:ok, _neo} = Bolt.Sips.start_link(url: "bolt://neo4j:test@localhost")
+iex> {:ok, _neo} = Bolt.Swigs.start_link(url: "bolt://neo4j:test@localhost")
 {:ok, #PID<0.237.0>}
 
-iex> conn = Bolt.Sips.conn()
+iex> conn = Bolt.Swigs.conn()
 #PID<0.242.0>
 
-iex> Bolt.Sips.query!(conn, "return 1 as n") |>
-...> Bolt.Sips.Response.first()
+iex> Bolt.Swigs.query!(conn, "return 1 as n") |>
+...> Bolt.Swigs.Response.first()
 %{"n" => 1}
 ```
 
@@ -117,7 +117,7 @@ As reported by Github: [contributions to master, excluding merge commits](https:
 
 ### Contributing
 
-- [Fork it](https://github.com/florinpatrascu/bolt_sips/fork)
+- [Fork it](https://github.com/ed-vazquez/bolt_swigs/fork)
 - Create your feature branch (`git checkout -b my-new-feature`)
 - Test (`mix test`)
 - Commit your changes (`git commit -am 'Add some feature'`)

@@ -18,18 +18,18 @@ baby_monster_cluster_conf = [
   prefix: :baby_monster_cluster
 ```
 
-In the example above we defined two different connections, each of them pointing to different Neo4j clusters. As you know now, every cluster will have role-specific connections as defined by the routers, in those clusters. The connection roles will be: `:write`, `:read` and `:route`. To specify what connection you want and on what server, you will use the `:prefix` optional parameter of the new `Bolt.Sips.conn/2` method. Example:
+In the example above we defined two different connections, each of them pointing to different Neo4j clusters. As you know now, every cluster will have role-specific connections as defined by the routers, in those clusters. The connection roles will be: `:write`, `:read` and `:route`. To specify what connection you want and on what server, you will use the `:prefix` optional parameter of the new `Bolt.Swigs.conn/2` method. Example:
 
 ```elixir
-Bolt.Sips.conn(:read, prefix: :monster_cluster)
-  |> Bolt.Sips.query!("MATCH (n) RETURN n.name AS name")
+Bolt.Swigs.conn(:read, prefix: :monster_cluster)
+  |> Bolt.Swigs.query!("MATCH (n) RETURN n.name AS name")
 ```
 
 or:
 
 ```elixir
-Bolt.Sips.conn(:read, prefix: :baby_monster_cluster)
-  |> Bolt.Sips.query!("MATCH (n) RETURN n.name AS name")
+Bolt.Swigs.conn(:read, prefix: :baby_monster_cluster)
+  |> Bolt.Swigs.query!("MATCH (n) RETURN n.name AS name")
 ```
 
 (wip)

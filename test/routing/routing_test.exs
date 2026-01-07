@@ -1,10 +1,10 @@
-defmodule Bolt.Sips.RoutingTest do
+defmodule Bolt.Swigs.RoutingTest do
   @moduledoc """
 
   """
-  use Bolt.Sips.BoltKitCase, async: false
+  use Bolt.Swigs.BoltKitCase, async: false
 
-  alias Bolt.Sips.Response
+  alias Bolt.Swigs.Response
 
   @moduletag :boltkit
 
@@ -15,7 +15,7 @@ defmodule Bolt.Sips.RoutingTest do
          ]
        }
   test "non_router.script", %{prefix: prefix} do
-    assert %{error: error} = Bolt.Sips.routing_table(prefix)
+    assert %{error: error} = Bolt.Swigs.routing_table(prefix)
     assert error =~ ~r/not a router/i
   end
 
@@ -30,17 +30,17 @@ defmodule Bolt.Sips.RoutingTest do
              read: %{"127.0.0.1:9002" => 0},
              route: %{"127.0.0.1:9001" => 0, "127.0.0.1:9002" => 0},
              write: %{"127.0.0.1:9001" => 0}
-           } = Bolt.Sips.routing_table(prefix)
+           } = Bolt.Swigs.routing_table(prefix)
 
-    assert %Bolt.Sips.Response{
+    assert %Bolt.Swigs.Response{
              results: [
                %{"name" => "Alice"},
                %{"name" => "Bob"},
                %{"name" => "Eve"}
              ]
            } =
-             Bolt.Sips.conn(:read, prefix: prefix)
-             |> Bolt.Sips.query!("MATCH (n) RETURN n.name AS name")
+             Bolt.Swigs.conn(:read, prefix: prefix)
+             |> Bolt.Swigs.query!("MATCH (n) RETURN n.name AS name")
   end
 
   @tag boltkit: %{
@@ -55,10 +55,10 @@ defmodule Bolt.Sips.RoutingTest do
              read: %{"127.0.0.1:9002" => 0},
              route: %{"127.0.0.1:9001" => 0, "127.0.0.1:9002" => 0},
              write: %{"127.0.0.1:9001" => 0}
-           } = Bolt.Sips.routing_table(prefix)
+           } = Bolt.Swigs.routing_table(prefix)
 
-    Bolt.Sips.conn(:read, prefix: prefix)
-    |> Bolt.Sips.query!("RETURN $x", %{x: 1})
+    Bolt.Swigs.conn(:read, prefix: prefix)
+    |> Bolt.Swigs.query!("RETURN $x", %{x: 1})
   end
 
   @tag boltkit: %{
@@ -69,11 +69,11 @@ defmodule Bolt.Sips.RoutingTest do
          ]
        }
   test "create_a.script", %{prefix: prefix} do
-    assert %{write: %{"127.0.0.1:9006" => 0}} = Bolt.Sips.routing_table(prefix)
+    assert %{write: %{"127.0.0.1:9006" => 0}} = Bolt.Swigs.routing_table(prefix)
 
     assert %Response{results: []} =
-             Bolt.Sips.conn(:write, prefix: prefix)
-             |> Bolt.Sips.query!("CREATE (a $x)", %{x: %{name: "Alice"}})
+             Bolt.Swigs.conn(:write, prefix: prefix)
+             |> Bolt.Swigs.query!("CREATE (a $x)", %{x: %{name: "Alice"}})
   end
 
   @tag boltkit: %{
@@ -84,11 +84,11 @@ defmodule Bolt.Sips.RoutingTest do
          ]
        }
   test "return_1.script", %{prefix: prefix} do
-    assert %{read: %{"127.0.0.1:9004" => 0}} = Bolt.Sips.routing_table(prefix)
+    assert %{read: %{"127.0.0.1:9004" => 0}} = Bolt.Swigs.routing_table(prefix)
 
     assert %Response{results: [%{"x" => 1}]} =
-             Bolt.Sips.conn(:read, prefix: prefix)
-             |> Bolt.Sips.query!("RETURN $x", %{x: 1})
+             Bolt.Swigs.conn(:read, prefix: prefix)
+             |> Bolt.Swigs.query!("RETURN $x", %{x: 1})
   end
 
   @tag boltkit: %{
@@ -100,9 +100,9 @@ defmodule Bolt.Sips.RoutingTest do
          ]
        }
   test "return_1_in_tx_twice.script", %{prefix: prefix} do
-    Bolt.Sips.conn(:read, prefix: prefix)
-    |> Bolt.Sips.transaction(fn conn ->
-      assert %Response{fields: ["1"]} = Bolt.Sips.query!(conn, "RETURN 1")
+    Bolt.Swigs.conn(:read, prefix: prefix)
+    |> Bolt.Swigs.transaction(fn conn ->
+      assert %Response{fields: ["1"]} = Bolt.Swigs.query!(conn, "RETURN 1")
     end)
   end
 
@@ -115,10 +115,10 @@ defmodule Bolt.Sips.RoutingTest do
          ]
        }
   test "return_1_twice.script", %{prefix: prefix} do
-    rconn1 = Bolt.Sips.conn(:read, prefix: prefix)
-    rconn2 = Bolt.Sips.conn(:read, prefix: prefix)
-    assert %Response{results: [%{"x" => 1}]} = Bolt.Sips.query!(rconn1, "RETURN $x", %{x: 1})
-    assert %Response{results: [%{"x" => 1}]} = Bolt.Sips.query!(rconn2, "RETURN $x", %{x: 1})
+    rconn1 = Bolt.Swigs.conn(:read, prefix: prefix)
+    rconn2 = Bolt.Swigs.conn(:read, prefix: prefix)
+    assert %Response{results: [%{"x" => 1}]} = Bolt.Swigs.query!(rconn1, "RETURN $x", %{x: 1})
+    assert %Response{results: [%{"x" => 1}]} = Bolt.Swigs.query!(rconn2, "RETURN $x", %{x: 1})
   end
 
   @tag boltkit: %{
@@ -129,10 +129,10 @@ defmodule Bolt.Sips.RoutingTest do
          ]
        }
   test "forbidden_on_read_only_database.script", %{prefix: prefix} do
-    conn = Bolt.Sips.conn(:write, prefix: prefix)
+    conn = Bolt.Swigs.conn(:write, prefix: prefix)
 
-    assert_raise Bolt.Sips.Exception, ~r/unable to write/i, fn ->
-      Bolt.Sips.query!(conn, "CREATE (n {name:'Bob'})")
+    assert_raise Bolt.Swigs.Exception, ~r/unable to write/i, fn ->
+      Bolt.Swigs.query!(conn, "CREATE (n {name:'Bob'})")
     end
   end
 end

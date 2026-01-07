@@ -1,9 +1,9 @@
 defmodule Query.Test do
-  use Bolt.Sips.ConnCase, async: true
+  use Bolt.Swigs.ConnCase, async: true
 
   alias Query.Test
-  alias Bolt.Sips.Test.Support.Database
-  alias Bolt.Sips.Response
+  alias Bolt.Swigs.Test.Support.Database
+  alias Bolt.Swigs.Response
 
   defmodule TestUser do
     defstruct name: "", bolt_sips: true
@@ -11,7 +11,7 @@ defmodule Query.Test do
 
   defp rebuild_fixtures(conn) do
     Database.clear(conn)
-    Bolt.Sips.Fixture.create_graph(conn, :bolt_sips)
+    Bolt.Swigs.Fixture.create_graph(conn, :bolt_swigs)
   end
 
   setup(%{conn: conn} = context) do
@@ -29,7 +29,7 @@ defmodule Query.Test do
       LIMIT 5
     """
 
-    {:ok, %Response{} = row} = Bolt.Sips.query(conn, cyp)
+    {:ok, %Response{} = row} = Bolt.Swigs.query(conn, cyp)
 
     assert Response.first(row)["Name"] == "Patrick Rothfuss",
            "missing 'The Name of the Wind' database, or data incomplete"
@@ -45,8 +45,8 @@ defmodule Query.Test do
         CALL db.index.fulltext.queryNodes(\"topic_label\", \"badparen)\") YIELD node RETURN node
       """
 
-      {:error, %Bolt.Sips.Error{code: "Neo.ClientError.Procedure.ProcedureCallFailed"}} =
-        Bolt.Sips.query(conn, cyp_fail)
+      {:error, %Bolt.Swigs.Error{code: "Neo.ClientError.Procedure.ProcedureCallFailed"}} =
+        Bolt.Swigs.query(conn, cyp_fail)
 
       cyp = """
         MATCH (n:Person {bolt_sips: true})
@@ -55,7 +55,7 @@ defmodule Query.Test do
         LIMIT 5
       """
 
-      {:ok, %Response{} = row} = Bolt.Sips.query(conn, cyp)
+      {:ok, %Response{} = row} = Bolt.Swigs.query(conn, cyp)
 
       assert Response.first(row)["Name"] == "Patrick Rothfuss",
              "missing 'The Name of the Wind' database, or data incomplete"
@@ -70,7 +70,7 @@ defmodule Query.Test do
       CALL apoc.util.sleep(20000) RETURN 1 as test
     """
 
-    {:ok, %Response{} = _row} = Bolt.Sips.query(conn, cyp_wait, %{}, timeout: 21_000)
+    {:ok, %Response{} = _row} = Bolt.Swigs.query(conn, cyp_wait, %{}, timeout: 21_000)
   end
 
   @tag :apoc
@@ -81,7 +81,7 @@ defmodule Query.Test do
       CALL apoc.util.sleep(10000) RETURN 1 as test
     """
 
-    {:error, _} = Bolt.Sips.query(conn, cyp_wait, %{}, timeout: 5_000)
+    {:error, _} = Bolt.Swigs.query(conn, cyp_wait, %{}, timeout: 5_000)
 
     cyp = """
       MATCH (n:Person {bolt_sips: true})
@@ -90,7 +90,7 @@ defmodule Query.Test do
       LIMIT 5
     """
 
-    {:ok, %Response{} = row} = Bolt.Sips.query(conn, cyp)
+    {:ok, %Response{} = row} = Bolt.Swigs.query(conn, cyp)
 
     assert Response.first(row)["Name"] == "Patrick Rothfuss",
            "missing 'The Name of the Wind' database, or data incomplete"
@@ -105,7 +105,7 @@ defmodule Query.Test do
       RETURN n.name AS name
     """
 
-    case Bolt.Sips.query(conn, cypher, %{name: "Kote"}) do
+    case Bolt.Swigs.query(conn, cypher, %{name: "Kote"}) do
       {:ok, %Response{} = rows} ->
         refute Enum.count(rows) == 0,
                "Did you initialize the 'The Name of the Wind' database?"
@@ -134,7 +134,7 @@ defmodule Query.Test do
               },
               type: "w"
             }} =
-             Bolt.Sips.query(conn, cypher, %{
+             Bolt.Swigs.query(conn, cypher, %{
                props: %Test.TestUser{name: "Strut", bolt_sips: true}
              })
   end
@@ -147,7 +147,7 @@ defmodule Query.Test do
     """
 
     assert {:ok, %Response{}} =
-             Bolt.Sips.query(conn, cypher, %{props: %{name: "Mep", bolt_sips: true}})
+             Bolt.Swigs.query(conn, cypher, %{props: %{name: "Mep", bolt_sips: true}})
   end
 
   test "executing a raw Cypher query with alias, and no parameters", context do
@@ -161,7 +161,7 @@ defmodule Query.Test do
       ORDER BY name DESC
     """
 
-    {:ok, %Response{} = r} = Bolt.Sips.query(conn, cypher)
+    {:ok, %Response{} = r} = Bolt.Swigs.query(conn, cypher)
 
     assert Enum.count(r) == 3,
            "you're missing some characters from the 'The Name of the Wind' db"
@@ -186,7 +186,7 @@ defmodule Query.Test do
       RETURN p
     """
 
-    %Response{} = rows = Bolt.Sips.query!(conn, cypher)
+    %Response{} = rows = Bolt.Swigs.query!(conn, cypher)
     assert Response.first(rows)["p"].properties["name"] == "Patrick Rothfuss"
   end
 
@@ -198,7 +198,7 @@ defmodule Query.Test do
       LIMIT 25
     """
 
-    %Response{results: rows} = Bolt.Sips.query!(conn, cypher)
+    %Response{results: rows} = Bolt.Swigs.query!(conn, cypher)
     roles = ["killer", "sword fighter", "magician", "musician", "many talents"]
     my_roles = Enum.map(rows, & &1["roles"]) |> List.flatten()
     assert my_roles -- roles == [], "found more roles in the db than expected"
@@ -213,7 +213,7 @@ defmodule Query.Test do
     """
 
     path =
-      Bolt.Sips.query!(conn, cypher)
+      Bolt.Swigs.query!(conn, cypher)
       |> Response.first()
       |> Map.get("p")
 
@@ -222,7 +222,7 @@ defmodule Query.Test do
 
   test "return a single number from a statement with params", context do
     conn = context[:conn]
-    row = Bolt.Sips.query!(conn, "RETURN $n AS num", %{n: 10}) |> Response.first()
+    row = Bolt.Swigs.query!(conn, "RETURN $n AS num", %{n: 10}) |> Response.first()
     assert row["num"] == 10
   end
 
@@ -230,7 +230,7 @@ defmodule Query.Test do
     conn = context[:conn]
 
     row =
-      Bolt.Sips.query!(conn, "RETURN $x AS n", %{x: %{abc: ["d", "e", "f"]}})
+      Bolt.Swigs.query!(conn, "RETURN $x AS n", %{x: %{abc: ["d", "e", "f"]}})
       |> Response.first()
 
     assert row["n"]["abc"] == ["d", "e", "f"]
@@ -238,20 +238,20 @@ defmodule Query.Test do
 
   test "return an array of numbers", context do
     conn = context[:conn]
-    row = Bolt.Sips.query!(conn, "RETURN [10,11,21] AS arr") |> Response.first()
+    row = Bolt.Swigs.query!(conn, "RETURN [10,11,21] AS arr") |> Response.first()
     assert row["arr"] == [10, 11, 21]
   end
 
   test "return a string", context do
     conn = context[:conn]
-    row = Bolt.Sips.query!(conn, "RETURN 'Hello' AS salute") |> Response.first()
+    row = Bolt.Swigs.query!(conn, "RETURN 'Hello' AS salute") |> Response.first()
     assert row["salute"] == "Hello"
   end
 
   test "UNWIND range(1, 10) AS n RETURN n", context do
     conn = context[:conn]
 
-    assert %Response{results: rows} = Bolt.Sips.query!(conn, "UNWIND range(1, 10) AS n RETURN n")
+    assert %Response{results: rows} = Bolt.Swigs.query!(conn, "UNWIND range(1, 10) AS n RETURN n")
 
     assert {1, 10} == rows |> Enum.map(& &1["n"]) |> Enum.min_max()
   end
@@ -260,7 +260,7 @@ defmodule Query.Test do
     conn = context[:conn]
 
     k =
-      Bolt.Sips.query!(conn, "MERGE (k:Person {name:'Kote', bolt_sips: true}) RETURN k LIMIT 1")
+      Bolt.Swigs.query!(conn, "MERGE (k:Person {name:'Kote', bolt_sips: true}) RETURN k LIMIT 1")
       |> Response.first()
       |> Map.get("k")
 
@@ -271,25 +271,25 @@ defmodule Query.Test do
   test "query/2 and query!/2", context do
     conn = context[:conn]
 
-    assert r = Bolt.Sips.query!(conn, "RETURN [10,11,21] AS arr")
+    assert r = Bolt.Swigs.query!(conn, "RETURN [10,11,21] AS arr")
     assert [10, 11, 21] = Response.first(r)["arr"]
 
-    assert {:ok, %Response{} = r} = Bolt.Sips.query(conn, "RETURN [10,11,21] AS arr")
+    assert {:ok, %Response{} = r} = Bolt.Swigs.query(conn, "RETURN [10,11,21] AS arr")
     assert [10, 11, 21] = Response.first(r)["arr"]
   end
 
   test "create a Bob node and check it was deleted afterwards", context do
     conn = context[:conn]
 
-    assert %Response{stats: stats} = Bolt.Sips.query!(conn, "CREATE (a:Person {name:'Bob'})")
+    assert %Response{stats: stats} = Bolt.Swigs.query!(conn, "CREATE (a:Person {name:'Bob'})")
     assert stats == %{"labels-added" => 1, "nodes-created" => 1, "properties-set" => 1}
 
     assert ["Bob"] ==
-             Bolt.Sips.query!(conn, "MATCH (a:Person {name: 'Bob'}) RETURN a.name AS name")
+             Bolt.Swigs.query!(conn, "MATCH (a:Person {name: 'Bob'}) RETURN a.name AS name")
              |> Enum.map(& &1["name"])
 
     assert %Response{stats: stats} =
-             Bolt.Sips.query!(conn, "MATCH (a:Person {name:'Bob'}) DELETE a")
+             Bolt.Swigs.query!(conn, "MATCH (a:Person {name:'Bob'}) DELETE a")
 
     assert stats["nodes-deleted"] == 1
   end
@@ -297,7 +297,7 @@ defmodule Query.Test do
   test "Cypher version 3", context do
     conn = context[:conn]
 
-    assert %Response{plan: plan} = Bolt.Sips.query!(conn, "EXPLAIN RETURN 1")
+    assert %Response{plan: plan} = Bolt.Swigs.query!(conn, "EXPLAIN RETURN 1")
     refute plan == nil
     assert Regex.match?(~r/CYPHER [3|4]/iu, plan["args"]["version"])
   end
@@ -306,7 +306,7 @@ defmodule Query.Test do
     conn = context[:conn]
 
     assert %Response{notifications: notifications, plan: plan} =
-             Bolt.Sips.query!(conn, "EXPLAIN MATCH (n), (m) RETURN n, m")
+             Bolt.Swigs.query!(conn, "EXPLAIN MATCH (n), (m) RETURN n, m")
 
     refute notifications == nil
     refute plan == nil
@@ -328,13 +328,13 @@ defmodule Query.Test do
 
   test "can execute a query after a failure", context do
     conn = context[:conn]
-    assert {:error, _} = Bolt.Sips.query(conn, "INVALID CYPHER")
-    assert {:ok, %Response{results: [%{"n" => 22}]}} = Bolt.Sips.query(conn, "RETURN 22 as n")
+    assert {:error, _} = Bolt.Swigs.query(conn, "INVALID CYPHER")
+    assert {:ok, %Response{results: [%{"n" => 22}]}} = Bolt.Swigs.query(conn, "RETURN 22 as n")
   end
 
   test "negative numbers are returned as negative numbers", context do
     conn = context[:conn]
-    assert {:ok, %Response{results: [%{"n" => -1}]}} = Bolt.Sips.query(conn, "RETURN -1 as n")
+    assert {:ok, %Response{results: [%{"n" => -1}]}} = Bolt.Swigs.query(conn, "RETURN -1 as n")
   end
 
   test "return a simple node", context do
@@ -343,14 +343,14 @@ defmodule Query.Test do
     assert %Response{
              results: [
                %{
-                 "p" => %Bolt.Sips.Types.Node{
+                 "p" => %Bolt.Swigs.Types.Node{
                    id: _,
                    labels: ["Person"],
                    properties: %{"bolt_sips" => true, "name" => "Patrick Rothfuss"}
                  }
                }
              ]
-           } = Bolt.Sips.query!(conn, "MATCH (p:Person {name: 'Patrick Rothfuss'}) RETURN p")
+           } = Bolt.Swigs.query!(conn, "MATCH (p:Person {name: 'Patrick Rothfuss'}) RETURN p")
   end
 
   test "Simple relationship", context do
@@ -364,7 +364,7 @@ defmodule Query.Test do
     assert %Response{
              results: [
                %{
-                 "r" => %Bolt.Sips.Types.Relationship{
+                 "r" => %Bolt.Swigs.Types.Relationship{
                    end: _,
                    id: _,
                    properties: %{},
@@ -373,7 +373,7 @@ defmodule Query.Test do
                  }
                }
              ]
-           } = Bolt.Sips.query!(conn, cypher)
+           } = Bolt.Swigs.query!(conn, cypher)
   end
 
   test "simple path", context do
@@ -387,21 +387,21 @@ defmodule Query.Test do
     assert %Response{
              results: [
                %{
-                 "p" => %Bolt.Sips.Types.Path{
+                 "p" => %Bolt.Swigs.Types.Path{
                    nodes: [
-                     %Bolt.Sips.Types.Node{
+                     %Bolt.Swigs.Types.Node{
                        id: _,
                        labels: [],
                        properties: %{"bolt_sips" => true, "name" => "Alice"}
                      },
-                     %Bolt.Sips.Types.Node{
+                     %Bolt.Swigs.Types.Node{
                        id: _,
                        labels: [],
                        properties: %{"bolt_sips" => true, "name" => "Bob"}
                      }
                    ],
                    relationships: [
-                     %Bolt.Sips.Types.UnboundRelationship{
+                     %Bolt.Swigs.Types.UnboundRelationship{
                        end: nil,
                        id: _,
                        properties: %{},
@@ -413,15 +413,15 @@ defmodule Query.Test do
                  }
                }
              ]
-           } = Bolt.Sips.query!(conn, cypher)
+           } = Bolt.Swigs.query!(conn, cypher)
   end
 
   test "transaction (commit)", context do
     conn = context[:conn]
 
-    Bolt.Sips.transaction(conn, fn conn ->
+    Bolt.Swigs.transaction(conn, fn conn ->
       book =
-        Bolt.Sips.query!(conn, "CREATE (b:Book {title: \"The Game Of Trolls\"}) return b")
+        Bolt.Swigs.query!(conn, "CREATE (b:Book {title: \"The Game Of Trolls\"}) return b")
         |> Response.first()
 
       assert %{"b" => g_o_t} = book
@@ -429,31 +429,32 @@ defmodule Query.Test do
     end)
 
     %Response{} =
-      books = Bolt.Sips.query!(conn, "MATCH (b:Book {title: \"The Game Of Trolls\"}) return b")
+      books = Bolt.Swigs.query!(conn, "MATCH (b:Book {title: \"The Game Of Trolls\"}) return b")
 
     assert 1 == Enum.count(books)
 
     # Clean data
 
     rem_books = "MATCH (b:Book {title: \"The Game Of Trolls\"}) DELETE b"
-    Bolt.Sips.query!(conn, rem_books)
+    Bolt.Swigs.query!(conn, rem_books)
   end
 
   test "transaction (rollback)", context do
     conn = context[:conn]
 
-    Bolt.Sips.transaction(conn, fn conn ->
+    Bolt.Swigs.transaction(conn, fn conn ->
       book =
-        Bolt.Sips.query!(conn, "CREATE (b:Book {title: \"The Game Of Trolls\"}) return b")
+        Bolt.Swigs.query!(conn, "CREATE (b:Book {title: \"The Game Of Trolls\"}) return b")
         |> Response.first()
 
       assert %{"b" => g_o_t} = book
       assert g_o_t.properties["title"] == "The Game Of Trolls"
-      Bolt.Sips.rollback(conn, :changed_my_mind)
+      Bolt.Swigs.rollback(conn, :changed_my_mind)
     end)
 
     assert %Response{} =
-             r = Bolt.Sips.query!(conn, "MATCH (b:Book {title: \"The Game Of Trolls\"}) return b")
+             r =
+             Bolt.Swigs.query!(conn, "MATCH (b:Book {title: \"The Game Of Trolls\"}) return b")
 
     assert Enum.count(r) == 0
   end

@@ -1,8 +1,8 @@
-defmodule Bolt.Sips.Routing.ConnectionsTest do
+defmodule Bolt.Swigs.Routing.ConnectionsTest do
   use ExUnit.Case, async: true
   @moduletag :routing
 
-  alias Bolt.Sips.Router
+  alias Bolt.Swigs.Router
 
   @current_connections %{
     read: %{"localhost:7688" => 10, "localhost:7689" => 20},

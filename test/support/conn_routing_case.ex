@@ -1,9 +1,9 @@
-defmodule Bolt.Sips.RoutingConnCase do
+defmodule Bolt.Swigs.RoutingConnCase do
   @moduletag :routing
 
   use ExUnit.CaseTemplate
 
-  alias Bolt.Sips
+  alias Bolt.Swigs
 
   @routing_connection_config [
     url: "bolt+routing://localhost:9001",

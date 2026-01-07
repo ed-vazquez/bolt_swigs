@@ -1,19 +1,19 @@
 # About encoding
 
-Bolt.Sips provides support for encoding your query result in different formats.
+Bolt.Swigs provides support for encoding your query result in different formats.
 For now, only JSON is supported.
 
 There is two way of encoding data to json:
 
-- By using the helpers provided by the module `Bolt.Sips.ResponseEncoder`
-- Using your usual JSON encoding library. `Bolt.Sips` have implementation for: Jason and Poison. With this the query results can be automatically encoded by one of the libraries available: Jason or Poison. No further work is required when using a framework like: Phoenix, for example.
+- By using the helpers provided by the module `Bolt.Swigs.ResponseEncoder`
+- Using your usual JSON encoding library. `Bolt.Swigs` have implementation for: Jason and Poison. With this the query results can be automatically encoded by one of the libraries available: Jason or Poison. No further work is required when using a framework like: Phoenix, for example.
 
 A few examples around the encoding suport:
 
 ```elixir
 iex> query_result = [
    %{
-     "t" => %Bolt.Sips.Types.Node{
+     "t" => %Bolt.Swigs.Types.Node{
        id: 26,
        labels: ["Test"],
        properties: %{
@@ -25,11 +25,11 @@ iex> query_result = [
    }
  ]
 
-# Using Bolt.Sips.ResponseEncoder
- iex> Bolt.Sips.ResponseEncoder.encode(query_result, :json)
+# Using Bolt.Swigs.ResponseEncoder
+ iex> Bolt.Swigs.ResponseEncoder.encode(query_result, :json)
 {:ok,
  "[{\"t\":{\"id\":26,\"labels\":[\"Test\"],\"properties\":{\"created_at\":\"2019-08-03T12:34:56+01:00\",\"name\":\"A test node\",\"uid\":12345}}}]"}
-iex(11)> Bolt.Sips.ResponseEncoder.encode!(query_result, :json)
+iex(11)> Bolt.Swigs.ResponseEncoder.encode!(query_result, :json)
 "[{\"t\":{\"id\":26,\"labels\":[\"Test\"],\"properties\":{\"created_at\":\"2019-08-03T12:34:56+01:00\",\"name\":\"A test node\",\"uid\":12345}}}]"
 
 # Using Jason
@@ -42,4 +42,4 @@ iex(13)> Poison.encode!(query_result)
 ```
 
 Both solutions rely on protocols, then they can be easily overridden if needed.
-More info in the modules `Bolt.Sips.ResponseEncoder.Json`, `Bolt.Sips.ResponseEncoder.Json.Jason`, `Bolt.Sips.ResponseEncoder.Json.Poison`
+More info in the modules `Bolt.Swigs.ResponseEncoder.Json`, `Bolt.Swigs.ResponseEncoder.Json.Jason`, `Bolt.Swigs.ResponseEncoder.Json.Poison`

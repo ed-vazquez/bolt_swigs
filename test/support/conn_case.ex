@@ -1,12 +1,12 @@
-defmodule Bolt.Sips.ConnCase do
+defmodule Bolt.Swigs.ConnCase do
   use ExUnit.CaseTemplate
 
   setup_all do
-    Bolt.Sips.start_link(Application.get_env(:bolt_sips, Bolt))
-    conn = Bolt.Sips.conn()
+    Bolt.Swigs.start_link(Application.get_env(:bolt_swigs, Bolt))
+    conn = Bolt.Swigs.conn()
 
     on_exit(fn ->
-      Bolt.Sips.Test.Support.Database.clear(conn)
+      Bolt.Swigs.Test.Support.Database.clear(conn)
     end)
 
     {:ok, conn: conn}

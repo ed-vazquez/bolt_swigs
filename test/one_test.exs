@@ -1,22 +1,22 @@
 defmodule One.Test do
-  # use Bolt.Sips.RoutingConnCase
+  # use Bolt.Swigs.RoutingConnCase
   # @moduletag :routing
 
-  # # alias Bolt.Sips.{Success, Error, Response}
-  # # alias Bolt.Sips.Types.{Node, Relationship, UnboundRelationship, Path}
+  # # alias Bolt.Swigs.{Success, Error, Response}
+  # # alias Bolt.Swigs.Types.{Node, Relationship, UnboundRelationship, Path}
 
   # @tag :routing
   # test "temporary placeholder for focused tests during development/debugging" do
   #   assert %{"r" => 300} ==
-  #            Bolt.Sips.conn(:write) |> Bolt.Sips.query!("RETURN 300 AS r") |> List.first()
+  #            Bolt.Swigs.conn(:write) |> Bolt.Swigs.query!("RETURN 300 AS r") |> List.first()
   # end
 
   use ExUnit.Case
-  alias Bolt.Sips.Response
+  alias Bolt.Swigs.Response
 
   test "a simple query" do
-    conn = Bolt.Sips.conn()
-    response = Bolt.Sips.query!(conn, "RETURN 300 AS r")
+    conn = Bolt.Swigs.conn()
+    response = Bolt.Swigs.query!(conn, "RETURN 300 AS r")
 
     assert %Response{results: [%{"r" => 300}]} = response
     assert response |> Enum.member?("r")
@@ -27,7 +27,7 @@ defmodule One.Test do
 
   # @tag :skip
   test "multiple statements" do
-    conn = Bolt.Sips.conn()
+    conn = Bolt.Swigs.conn()
 
     q = """
     MATCH (n {bolt_sips: true}) OPTIONAL MATCH (n)-[r]-() DELETE n,r;
@@ -35,7 +35,7 @@ defmodule One.Test do
     MATCH (b:BoltSips{bolt_sips: true}) RETURN b
     """
 
-    l = Bolt.Sips.query!(conn, q)
+    l = Bolt.Swigs.query!(conn, q)
     assert is_list(l)
 
     assert 3 ==

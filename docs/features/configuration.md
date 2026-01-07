@@ -1,15 +1,15 @@
 # Configuration
 
-Bolt.Sips can be configured using the well known Mix config files, or by using simple keyword lists.
+Bolt.Swigs can be configured using the well known Mix config files, or by using simple keyword lists.
 
 This is the most basic configuration:
 
 ```elixir
-config :bolt_sips, Bolt,
+config :bolt_swigs, Bolt,
   url: "bolt://localhost:7687"
 ```
 
-It tells Bolt.Sips your Neo4j server is available locally, and it listens on port 7687, expecting bolt commands.
+It tells Bolt.Swigs your Neo4j server is available locally, and it listens on port 7687, expecting bolt commands.
 
 These are the values you can configure, and their default values:
 
@@ -24,7 +24,7 @@ These are the values you can configure, and their default values:
 Connecting to remote (hosted) Neo4j servers, such as the ones available (also for free) at [Neo4j/Sandbox](https://neo4j.com/sandbox-v2/):
 
 ```elixir
-config :bolt_sips, Bolt,
+config :bolt_swigs, Bolt,
   url: "bolt://<ip_address>:<bolt_port>",
   basic_auth: [username: "neo4j", password: "#######"]
   ssl: true # or for example `[verify: :verify_none]` if custom ssl options
@@ -32,11 +32,11 @@ config :bolt_sips, Bolt,
 
 ## Direct mode
 
-Until this version, `Bolt.Sips` was used for connecting to a single Neo4j server from the moment the hosting app started, until the hosting app was terminated/restarted. This is known as the: `direct` mode. In `direct` mode, the `Bolt.Sips` driver has one configuration describing the connection to a single Neo4j server.
+Until this version, `Bolt.Swigs` was used for connecting to a single Neo4j server from the moment the hosting app started, until the hosting app was terminated/restarted. This is known as the: `direct` mode. In `direct` mode, the `Bolt.Swigs` driver has one configuration describing the connection to a single Neo4j server.
 
 Since this connection mode is well known to our users, we'll not spend time on talking about it. It is sufficient to say that in direct mode, you have one configurable pool of connections, and the settings governing them i.e. timeout,  size, etc., are all about this single connection.
 
-Because starting with version 2.0 `Bolt.Sips` is supporting a new type of connectivity: `routing`, for connecting to multiple servers or to a Neo4j causal cluster, you must specify the `scheme` in the `url` parameter, of your configuration. Example, for configuring a connection in `direct` mode:
+Because starting with version 2.0 `Bolt.Swigs` is supporting a new type of connectivity: `routing`, for connecting to multiple servers or to a Neo4j causal cluster, you must specify the `scheme` in the `url` parameter, of your configuration. Example, for configuring a connection in `direct` mode:
 
     url: "bolt://localhost:7687"
 
@@ -44,7 +44,7 @@ We'll spend more ink on talking about the `routing` mode, next.
 
 ## Routing mode
 
-With the 2.0 version, `Bolt.Sips` is implementing the ability to connect your app to a Neo4j causal cluster. You can read more about this, here: [Neo4j Causal Clustering](https://neo4j.com/docs/operations-manual/current/clustering/introduction/)
+With the 2.0 version, `Bolt.Swigs` is implementing the ability to connect your app to a Neo4j causal cluster. You can read more about this, here: [Neo4j Causal Clustering](https://neo4j.com/docs/operations-manual/current/clustering/introduction/)
 
 The features of using a causal cluster, in Neo4j's own words:
 
@@ -54,7 +54,7 @@ The features of using a causal cluster, in Neo4j's own words:
 > - Scale: Read Replicas provide a massively scalable platform for graph queries that enables very large graph workloads to be executed in a widely distributed topology.
 > - Causal consistency: when invoked, a client application is guaranteed to read at least its own writes.
 
-To configure `Bolt.Sips` for connecting to a Neo4j Causal Cluster, you only need the specify the appropriate scheme, in the `url` configuration parameter:
+To configure `Bolt.Swigs` for connecting to a Neo4j Causal Cluster, you only need the specify the appropriate scheme, in the `url` configuration parameter:
 
     url: "bolt+routing://localhost:7687"
 
@@ -66,49 +66,49 @@ Prefer the latter, since `bolt+routing` appears to be soon deprecated, by Neo4j.
 
 ## Role based connections
 
-When we implemented the routing mode, we realized we could extend this ability to letting you define any number of connections, identified by a role name of your choice. For example, say your default configuration for `Bolt.Sips` looks like this:
+When we implemented the routing mode, we realized we could extend this ability to letting you define any number of connections, identified by a role name of your choice. For example, say your default configuration for `Bolt.Swigs` looks like this:
 
 ```elixir
-config :bolt_sips, Bolt,
+config :bolt_swigs, Bolt,
   url: "bolt://localhost:7687",
   basic_auth: [username: "neo4j", password: "test"],
   pool_size: 10,
   max_overflow: 2,
 ```
 
-`Bolt.Sips` will load it by default, when your application starts. And with a configuration like that, the default mode, you will continue to obtain connections using the default `Bolt.Sips.conn()` function.
+`Bolt.Swigs` will load it by default, when your application starts. And with a configuration like that, the default mode, you will continue to obtain connections using the default `Bolt.Swigs.conn()` function.
 
 However, if you require to have different connections, say: to a different Neo4j server that has some specific role, you could add a new configuration, for example:
 
 ```elixir
-config :bolt_sips, :hidden_gems,
+config :bolt_swigs, :hidden_gems,
   url: "bolt://localhost:1234",
   pool_size: 50,
   role: :hidden_gems
 ```
 
-You'd have to load this config separately, after the starting the `Bolt.Sips`driver. Like this:
+You'd have to load this config separately, after the starting the `Bolt.Swigs`driver. Like this:
 
 ```elixir
-iex> Bolt.Sips.start_link(Application.get_env(:bolt_sips, :hidden_gems))
+iex> Bolt.Swigs.start_link(Application.get_env(:bolt_swigs, :hidden_gems))
 {:ok, #PID<0.266.0>}
 ```
 
 and the you can use connections from this new configuration, as easy as this:
 
 ```elixir
-iex> conn = Bolt.Sips.conn(:hidden_gems)
+iex> conn = Bolt.Swigs.conn(:hidden_gems)
 #PID<0.324.0>
 ```
 
 while for obtaing the connections from your default configuration, is business as usual:
 
 ```elixir
-iex> conn = Bolt.Sips.conn()
+iex> conn = Bolt.Swigs.conn()
 #PID<0.309.0>
 ```
 
-The new connection pool is supervised by the main `Bolt.Sips.ConnectionSupervisor`, you don't have to do anythings special for that.
+The new connection pool is supervised by the main `Bolt.Swigs.ConnectionSupervisor`, you don't have to do anythings special for that.
 
 ![](assets/role_based_connections.png?raw=true)
 
@@ -135,8 +135,8 @@ my_secret_cluster_config [
     prefix: :secret_cluster
   ]
 
-{:ok, _pid} = Bolt.Sips.start_link(@routing_connection_config)
-conn = Bolt.Sips.conn(:write, prefix: :secret_cluster)
+{:ok, _pid} = Bolt.Swigs.start_link(@routing_connection_config)
+conn = Bolt.Swigs.conn(:write, prefix: :secret_cluster)
 ```
 
 And you can start as many connections as needed, for as long as the `:prefix` has different names. These connections can be used for connecting to the same or different Neo4j servers.

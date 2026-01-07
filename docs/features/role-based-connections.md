@@ -24,17 +24,17 @@ backend_config = [
   ]
 
 
-{:ok, _pid} = Bolt.Sips.start_link(frontend_config)
-{:ok, _pid} = Bolt.Sips.start_link(backend_config)
+{:ok, _pid} = Bolt.Swigs.start_link(frontend_config)
+{:ok, _pid} = Bolt.Swigs.start_link(backend_config)
 
-:frontend = Bolt.Sips.conn(:frontend)
-:backend = Bolt.Sips.conn(:backend)
+:frontend = Bolt.Swigs.conn(:frontend)
+:backend = Bolt.Swigs.conn(:backend)
 
-%Response{results: [%{"n" => 1}]} = Bolt.Sips.query!(:frontend, "RETURN 1 as n")
-%Response{results: [%{"n" => 1}]} = Bolt.Sips.query!(:backend, "RETURN 1 as n")
+%Response{results: [%{"n" => 1}]} = Bolt.Swigs.query!(:frontend, "RETURN 1 as n")
+%Response{results: [%{"n" => 1}]} = Bolt.Swigs.query!(:backend, "RETURN 1 as n")
 
 ```
 
 The last two Cypher queries above will be executed on two different servers. And yes you can run them concurrently since their respective pools will not compete for the same resources.
 
-If you desire to terminate a role-based connection, you can easily do so. Just like this: `:ok = Bolt.Sips.terminate_connections(:backend)`.
+If you desire to terminate a role-based connection, you can easily do so. Just like this: `:ok = Bolt.Swigs.terminate_connections(:backend)`.

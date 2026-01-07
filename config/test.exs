@@ -1,6 +1,6 @@
 import Config
 
-config :bolt_sips, Bolt,
+config :bolt_swigs, Bolt,
   # default port considered to be: 7687
   url: "bolt://localhost",
   basic_auth: [username: "neo4j", password: "test"],
@@ -18,7 +18,7 @@ level =
     :info
   end
 
-config :bolt_sips,
+config :bolt_swigs,
   log: true,
   log_hex: false
 
